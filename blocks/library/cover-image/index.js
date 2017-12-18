@@ -13,6 +13,7 @@ import './editor.scss';
 import './style.scss';
 import { registerBlockType, createBlock } from '../../api';
 import Editable from '../../editable';
+import AlignmentToolbar from '../../alignment-toolbar';
 import MediaUploadButton from '../../media-upload-button';
 import BlockControls from '../../block-controls';
 import BlockAlignmentToolbar from '../../block-alignment-toolbar';
@@ -42,6 +43,10 @@ registerBlockType( 'core/cover-image', {
 		},
 		align: {
 			type: 'string',
+		},
+		contentAlign: {
+			type: 'string',
+			default: 'center',
 		},
 		id: {
 			type: 'number',
@@ -85,7 +90,7 @@ registerBlockType( 'core/cover-image', {
 	},
 
 	edit( { attributes, setAttributes, focus, setFocus, className } ) {
-		const { url, title, align, id, hasParallax, dimRatio } = attributes;
+		const { url, title, align, contentAlign, id, hasParallax, dimRatio } = attributes;
 		const updateAlignment = ( nextAlign ) => setAttributes( { align: nextAlign } );
 		const onSelectImage = ( media ) => setAttributes( { url: media.url, id: media.id } );
 		const toggleParallax = () => setAttributes( { hasParallax: ! hasParallax } );
@@ -96,6 +101,7 @@ registerBlockType( 'core/cover-image', {
 			undefined;
 		const classes = classnames(
 			className,
+			contentAlign !== 'center' && `contentalign${ contentAlign }`,
 			dimRatioToClass( dimRatio ),
 			{
 				'has-background-dim': dimRatio !== 0,
@@ -138,6 +144,13 @@ registerBlockType( 'core/cover-image', {
 					min={ 0 }
 					max={ 100 }
 					step={ 10 }
+				/>
+				<p>{ __( 'Text Alignment' ) }</p>
+				<AlignmentToolbar
+					value={ contentAlign }
+					onChange={ ( nextAlign ) => {
+						setAttributes( { contentAlign: nextAlign } );
+					} }
 				/>
 			</InspectorControls>,
 		];
@@ -202,7 +215,7 @@ registerBlockType( 'core/cover-image', {
 	},
 
 	save( { attributes, className } ) {
-		const { url, title, hasParallax, dimRatio, align } = attributes;
+		const { url, title, hasParallax, dimRatio, align, contentAlign } = attributes;
 		const style = url ?
 			{ backgroundImage: `url(${ url })` } :
 			undefined;
@@ -214,6 +227,7 @@ registerBlockType( 'core/cover-image', {
 				'has-parallax': hasParallax,
 			},
 			align ? `align${ align }` : null,
+			contentAlign !== 'center' ? `contentalign${ contentAlign }` : null,
 		);
 
 		return (
