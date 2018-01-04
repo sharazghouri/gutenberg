@@ -46,7 +46,8 @@ function ModeSwitcher( { onSwitch, mode } ) {
 			choices={ choices }
 			value={ mode }
 			onSelect={ onSwitch }
-		/>
+		>
+		</MenuItemsGroup>
 	);
 }
 
