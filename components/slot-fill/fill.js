@@ -46,14 +46,6 @@ class Fill extends Component {
 		}
 	}
 
-	componentDidUpdate() {
-		const { getSlot = noop } = this.context;
-		const slot = getSlot( this.props.name );
-		if ( slot && ! slot.props.bubblesVirtually ) {
-			slot.forceUpdate();
-		}
-	}
-
 	resetOccurrence() {
 		this.occurrence = null;
 	}
@@ -62,6 +54,9 @@ class Fill extends Component {
 		const { getSlot = noop } = this.context;
 		const { name, children } = this.props;
 		const slot = getSlot( name );
+		if ( slot && ! slot.props.bubblesVirtually ) {
+			slot.forceUpdate();
+		}
 		if ( ! slot || ! slot.props.bubblesVirtually ) {
 			return null;
 		}
